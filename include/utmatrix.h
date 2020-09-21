@@ -66,6 +66,7 @@ TVector<ValType>::TVector(int s, int si)
         throw s;
     size = s;
     pVector = new ValType[size];
+	cout << "Hello there" << endl;
 } /*-------------------------------------------------------------------------*/
 
 template <class ValType> //конструктор копирования
