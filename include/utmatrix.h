@@ -51,6 +51,7 @@ public:
       in >> v.pVector[i];
     return in;
   }
+
   friend ostream& operator<<(ostream &out, const TVector &v)
   {
     for (int i = 0; i < v.Size; i++)
@@ -127,6 +128,7 @@ TVector<ValType>& TVector<ValType>::operator=(const TVector &v)
         {
             pVector[i] = v.pVector[i];
         }
+        StartIndex = v.StartIndex;
     }
     return *this;
 }
