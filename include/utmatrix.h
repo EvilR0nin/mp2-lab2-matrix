@@ -5,6 +5,8 @@
 //
 // Верхнетреугольная матрица - реализация на основе шаблона вектора
 
+#pragma once
+
 #ifndef __TMATRIX_H__
 #define __TMATRIX_H__
 
@@ -64,7 +66,9 @@ template <class ValType>
 TVector<ValType>::TVector(int s, int si)
 {
     if (s < 0 || s > MAX_VECTOR_SIZE)
-        throw s;
+		throw s;
+	if (si < 0)
+		throw si;
     Size = s;
     pVector = new ValType[Size];
     StartIndex = si;
@@ -91,6 +95,10 @@ TVector<ValType>::~TVector()
 template <class ValType> // доступ
 ValType& TVector<ValType>::operator[](int pos)
 {
+	if ((pos - StartIndex) < 0)
+		throw "Negative index";
+	if ((pos - StartIndex) > Size)
+		throw "Too large index";
     return pVector[pos - StartIndex];
 }
 
@@ -170,6 +178,8 @@ template <class ValType> // сложение
 TVector<ValType> TVector<ValType>::operator+(const TVector<ValType> &v)
 {
     TVector<ValType> tmp(Size, StartIndex);
+	if (Size != v.Size)
+		throw "Unequal sizes";
     for (int i = 0; i < Size; i++)
         tmp.pVector[i] = pVector[i] + v.pVector[i];
     return tmp;
@@ -179,6 +189,8 @@ template <class ValType> // вычитание
 TVector<ValType> TVector<ValType>::operator-(const TVector<ValType> &v)
 {
     TVector<ValType> tmp(Size, StartIndex);
+	if (Size != v.Size)
+		throw "Unequal sizes";
     for (int i = 0; i < Size; i++)
         tmp.pVector[i] = pVector[i] - v.pVector[i];
     return tmp;
@@ -188,6 +200,8 @@ template <class ValType> // скалярное произведение
 ValType TVector<ValType>::operator*(const TVector<ValType> &v)
 {
     ValType res = 0;
+	if (Size != v.Size)
+		throw "Unequal sizes";
     for (int i = 0; i < Size; i++)
         res += v.pVector[i] * pVector[i];
     return res;
@@ -226,6 +240,8 @@ public:
 template <class ValType>
 TMatrix<ValType>::TMatrix(int s): TVector<TVector<ValType> >(s)
 {
+	if (s > MAX_MATRIX_SIZE)
+		throw s;
     for (int i = 0; i < s; i++)
     {
         TVector <ValType> tmp(s - i, i);
@@ -248,7 +264,7 @@ bool TMatrix<ValType>::operator==(const TMatrix<ValType> &mt) const
         return true;
     else
     {
-        if (size != mt.Size)
+        if (Size != mt.Size)
             return false;
         for (int i = 0; i < Size; i++)
         {
